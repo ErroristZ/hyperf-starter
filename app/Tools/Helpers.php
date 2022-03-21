@@ -10,19 +10,29 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-if (!function_exists('objToArray')) {
     /**
-     * 对象转数组
-     * @param string $data
-     * @return array|mixed
-     * @throws JsonException
+     * 获取欢迎语.
      */
-    function objToArray(string $data = '')
+    function getHello(): string
     {
-        if (empty($data)) {
-            return [];
+        // 获取当前时间的 小时 单位
+        $h = date('H');
+        if ($h < 6) {
+            $time = '凌晨好';
+        } elseif ($h < 9) {
+            $time = '早上好';
+        } elseif ($h < 12) {
+            $time = '上午好';
+        } elseif ($h < 14) {
+            $time = '中午好';
+        } elseif ($h < 17) {
+            $time = '下午好';
+        } elseif ($h < 19) {
+            $time = '傍晚好';
+        } elseif ($h < 22) {
+            $time = '晚上好';
+        } else {
+            $time = '深夜好';
         }
-
-        return json_decode(json_encode($data, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+        return $time;
     }
-}

@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('email', 50)->comment('邮箱');
             $table->string('avatar', 500)->nullable()->comment('头像');
             $table->tinyInteger('status')->default(1)->comment('状态 0待审核 1通过 -1失败');
+            $table->string('position', 255)->nullable()->comment('职位');
 
             $table->index('id');
             $table->index('name');

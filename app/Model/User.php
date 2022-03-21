@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
 
@@ -24,8 +25,9 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $email
  * @property string $avatar
  * @property int $status
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property string $position
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property string $deleted_at
  */
 class User extends Model
@@ -44,7 +46,7 @@ class User extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'name', 'mobile', 'nickname', 'username', 'status', 'avatar', 'email', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'name', 'mobile', 'nickname', 'username', 'status', 'avatar', 'email', 'position', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * The attributes that should be cast to native types.

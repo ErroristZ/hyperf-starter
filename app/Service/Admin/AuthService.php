@@ -95,13 +95,14 @@ class AuthService extends AbstractController
      */
     public function initialization($request): array
     {
-        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first();
+        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username','avatar', 'nickname', 'position']);
+
+        $user['timeFix'] = getHello() . '，' . $user->nickname . '，欢迎回来';
 
         $data = [
             'user_info' => $user,
             'permission' => $this->getMenuList($user)
         ];
-
         return $this->buildSuccess($data);
     }
 
