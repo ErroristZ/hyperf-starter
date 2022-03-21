@@ -28,9 +28,9 @@ class UserService
      * FunctionName：loginLog
      * Description：
      * Author：zhangkang.
-     * @param $user
+     * @param object $user
      */
-    public function loginLog($user)
+    public function loginLog(object $user)
     {
         $this->eventDispatcher->dispatch(new UserLogin($user));
     }
