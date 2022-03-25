@@ -35,7 +35,6 @@ class AuthService extends AbstractController
      * Description：登录
      * Author：zhangkang.
      * @param $request
-     * @return array
      * @throws InvalidArgumentException
      * @throws JsonException
      */
@@ -95,13 +94,13 @@ class AuthService extends AbstractController
      */
     public function initialization($request): array
     {
-        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username','avatar', 'nickname', 'position']);
+        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'avatar', 'nickname', 'position']);
 
         $user['timeFix'] = getHello() . '，' . $user->nickname . '，欢迎回来';
 
         $data = [
             'user_info' => $user,
-            'permission' => $this->getMenuList($user)
+            'permission' => $this->getMenuList($user),
         ];
         return $this->buildSuccess($data);
     }
@@ -109,9 +108,7 @@ class AuthService extends AbstractController
     /**
      * FunctionName：getMenuList
      * Description：
-     * Author：zhangkang
-     * @param object $user
-     * @return array
+     * Author：zhangkang.
      */
     protected function getMenuList(object $user): array
     {
@@ -124,7 +121,7 @@ class AuthService extends AbstractController
         if ($user->id == config('super_admin')) {
             $permission = Permission::query()->orderBy('sort', 'asc')->get()->toArray();
         } else {
-            $permission =  Enforcer::GetImplicitPermissionsForUser($user->username);
+            $permission = Enforcer::GetImplicitPermissionsForUser($user->username);
         }
 
         return $permission;

@@ -13,6 +13,8 @@ namespace App\Listener;
 
 use App\Event\UserLogin;
 use App\Model\Log;
+use App\Model\User;
+use Carbon\Carbon;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 
@@ -37,6 +39,11 @@ class UserLoginListener implements ListenerInterface
             'info' => $event->user->info,
             'ip' => $event->user->ip,
             'user_agent' => $event->user->header,
+        ]);
+
+        User::where('id', $event->user->id)->update([
+            'last_at' => Carbon::now(),
+            'ip' => $event->user->ip,
         ]);
     }
 }

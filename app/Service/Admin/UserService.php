@@ -11,13 +11,15 @@ declare(strict_types=1);
  */
 namespace App\Service\Admin;
 
+use App\Controller\AbstractController;
 use App\Event\UserLogin;
 use App\Model\User;
+use Donjan\Casbin\Enforcer;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-class UserService
+class UserService extends AbstractController
 {
     /**
      * @Inject
@@ -28,7 +30,6 @@ class UserService
      * FunctionName：loginLog
      * Description：
      * Author：zhangkang.
-     * @param object $user
      */
     public function loginLog(object $user)
     {
@@ -63,5 +64,25 @@ class UserService
         (new self())->loginLog($user);
 
         return true;
+    }
+
+    /**
+     * FunctionName：list
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function list($request): array
+    {
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+
+        $list = User::query()->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
+
+        foreach ($list as $key => $value) {
+            $list[$key]['roleIds'] = Enforcer::getRolesForUser($value->name);
+        }
+
+        return $this->paginate($list);
     }
 }

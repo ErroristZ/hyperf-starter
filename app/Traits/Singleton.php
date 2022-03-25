@@ -15,7 +15,7 @@ use Hyperf\Utils\Context;
 
 /**
  * 构建单例基类
- * Trait Singleton
+ * Trait Singleton.
  */
 trait Singleton
 {

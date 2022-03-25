@@ -26,6 +26,8 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $avatar
  * @property int $status
  * @property string $position
+ * @property string $ip
+ * @property Carbon $last_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $deleted_at
@@ -36,7 +38,7 @@ class User extends Model
 
     /**
      * The table associated with the model.
-     *
+     *`.
      * @var string
      */
     protected $table = 'users';
@@ -46,7 +48,7 @@ class User extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'name', 'mobile', 'nickname', 'username', 'status', 'avatar', 'email', 'position', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'name', 'mobile', 'nickname', 'username', 'status', 'avatar', 'email', 'position', 'created_at', 'ip', 'last_at', 'updated_at', 'deleted_at'];
 
     /**
      * The attributes that should be cast to native types.

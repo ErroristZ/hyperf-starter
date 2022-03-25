@@ -60,5 +60,4 @@ class CodeConstants
     public const SERVICE_LOGIN_ACCOUNT_ERROR = ['code' => 500103, 'message' => '账号或密码错误'];
 
     public const SERVICE_LOGIN_STATUS_ERROR = ['code' => 500103, 'message' => '用户已禁用'];
-
 }

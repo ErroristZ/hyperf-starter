@@ -18,8 +18,8 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use JsonException;
-use Psr\SimpleCache\InvalidArgumentException;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff")
@@ -39,7 +39,7 @@ class AuthController
 
     /**
      * FunctionName：login
-     * Description：登录
+     * Description：登录.
      * @PostMapping(path="login")
      * Author：zhangkang.
      *@throws InvalidArgumentException|JsonException
@@ -51,7 +51,7 @@ class AuthController
 
     /**
      * FunctionName：refreshToken
-     * Description：刷新jwt
+     * Description：刷新jwt.
      * @PostMapping(path="refresh")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
      * Author：zhangkang.
@@ -64,7 +64,7 @@ class AuthController
 
     /**
      * FunctionName：logout
-     * Description：退出登录
+     * Description：退出登录.
      * @PostMapping(path="logout")
      * Author：zhangkang.
      * @throws InvalidArgumentException
@@ -76,7 +76,7 @@ class AuthController
 
     /**
      * FunctionName：initialization
-     * Description：初始化操作
+     * Description：初始化操作.
      * @GetMapping(path="initialization")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
      * Author：zhangkang.

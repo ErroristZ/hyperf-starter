@@ -1,15 +1,14 @@
 <?php
-/**
- * Copyright (C)
- * FileName: UserCode.php
- * Description:
- *
- * @author zhangkang
- * @Create Date    2022/3/18 09:41
- * @Update Date    2022/3/18 09:41 By zhangkang
- * @version V1.0
- */
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Constants;
 
 class UserCode

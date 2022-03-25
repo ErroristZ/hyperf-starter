@@ -29,7 +29,7 @@ return [
     ],
     'response_log' => [
         'handler' => [
-            'class' => Monolog\Handler\RotatingFileHandler ::class,
+            'class' => Monolog\Handler\RotatingFileHandler::class,
             'constructor' => [
                 'filename' => BASE_PATH . '/runtime/logs/response_log/response.log',
                 'level' => Monolog\Logger::DEBUG,
@@ -46,7 +46,7 @@ return [
     ],
     'sql' => [
         'handler' => [
-            'class' => Monolog\Handler\RotatingFileHandler ::class,
+            'class' => Monolog\Handler\RotatingFileHandler::class,
             'constructor' => [
                 'filename' => BASE_PATH . '/runtime/logs/sql/sql.log',
                 'level' => Monolog\Logger::DEBUG,
@@ -60,5 +60,5 @@ return [
                 'allowInlineLineBreaks' => true,
             ],
         ],
-    ]
+    ],
 ];

@@ -19,7 +19,8 @@ use Hyperf\HttpServer\Contract\ResponseInterface;
 
 abstract class AbstractController
 {
-    use ApiTrait, ValidationTrait;
+    use ApiTrait;
+    use ValidationTrait;
 
     /**
      * @Inject

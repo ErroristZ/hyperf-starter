@@ -31,6 +31,8 @@ class CreateUsersTable extends Migration
             $table->string('avatar', 500)->nullable()->comment('头像');
             $table->tinyInteger('status')->default(1)->comment('状态 0待审核 1通过 -1失败');
             $table->string('position', 255)->nullable()->comment('职位');
+            $table->ipAddress('ip', '15')->comment('访问ip');
+            $table->dateTime('last_at', '15')->comment('最近登录时间');
 
             $table->index('id');
             $table->index('name');

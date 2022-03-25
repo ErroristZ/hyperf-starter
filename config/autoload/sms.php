@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 /**
- * This file is part of hyperf-ext/sms.
+ * This file is part of Hyperf.
  *
- * @link     https://github.com/hyperf-ext/sms
- * @contact  eric@zhu.email
- * @license  https://github.com/hyperf-ext/sms/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
     'timeout' => 5.0,

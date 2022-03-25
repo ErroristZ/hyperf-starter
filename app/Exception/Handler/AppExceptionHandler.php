@@ -27,13 +27,11 @@ class AppExceptionHandler extends ExceptionHandler
 
     /**
      * @Inject
-     * @var RequestInterface
      */
     protected RequestInterface $request;
 
     /**
      * @Inject
-     * @var \Hyperf\HttpServer\Contract\ResponseInterface
      */
     protected \Hyperf\HttpServer\Contract\ResponseInterface $response;
 
@@ -56,7 +54,6 @@ class AppExceptionHandler extends ExceptionHandler
             return $this->error($throwable->getCode(), $throwable->getMessage());
         }
         return $this->error(500, $message);
-
     }
 
     public function isValid(Throwable $throwable): bool

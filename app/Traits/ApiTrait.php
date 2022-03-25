@@ -39,6 +39,54 @@ trait ApiTrait
     protected ResponseInterface $response;
 
     /**
+     * FunctionName：buildSuccess
+     * Description：成功返回
+     * Author：zhangkang.
+     */
+    public function buildSuccess(array $data = [], string $message = ErrorCode::MESSAGES[ErrorCode::SUCCESS], int $code = ErrorCode::SUCCESS): array
+    {
+        return [
+            'code' => $code,
+            'message' => $message,
+            'data' => $data,
+        ];
+    }
+
+    /**
+     * FunctionName：buildFailed
+     * Description：失败返回
+     * Author：zhangkang.
+     * @param $codeResponse
+     * @param null|array $data
+     */
+    public function buildFailed($codeResponse, array $data = []): array
+    {
+        return [
+            'code' => $codeResponse['code'],
+            'message' => $codeResponse['message'],
+            'data' => $data,
+        ];
+    }
+
+    /**
+     * FunctionName：paginate
+     * Description：成功分页返回
+     * Author：zhangkang.
+     * @param $list
+     */
+    public function paginate($list): array
+    {
+        $data = [
+            'list' => $list->items(),
+            'perPage' => $list->perPage(),
+            'total' => $list->total(),
+            'currentPage' => $list->currentPage(),
+        ];
+
+        return $this->buildSuccess($data);
+    }
+
+    /**
      * FunctionName：error
      * Description：
      * Author：zhangkang.
@@ -65,44 +113,10 @@ trait ApiTrait
             'data' => $data,
         ];
 
-        if (config('response_log')) Log::responseLog()->info('返回参数：' . json_encode($return, JSON_THROW_ON_ERROR));
+        if (config('response_log')) {
+            Log::responseLog()->info('返回参数：' . json_encode($return, JSON_THROW_ON_ERROR));
+        }
 
         return $return;
-    }
-
-
-    /**
-     * FunctionName：buildSuccess
-     * Description：成功返回
-     * Author：zhangkang
-     * @param array $data
-     * @param string $message
-     * @param int $code
-     * @return array
-     */
-    public function buildSuccess(array $data = [], string $message = ErrorCode::MESSAGES[ErrorCode::SUCCESS], int $code = ErrorCode::SUCCESS): array
-    {
-        return [
-            'code' => $code,
-            'message' => $message,
-            'data' => $data,
-        ];
-    }
-
-    /**
-     * FunctionName：buildFailed
-     * Description：失败返回
-     * Author：zhangkang
-     * @param $codeResponse
-     * @param array|null $data
-     * @return array
-     */
-    public function buildFailed($codeResponse, array $data = []): array
-    {
-        return [
-            'code' => $codeResponse['code'],
-            'message' => $codeResponse['message'],
-            'data' => $data,
-        ];
     }
 }
