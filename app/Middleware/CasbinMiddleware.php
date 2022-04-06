@@ -46,10 +46,10 @@ class CasbinMiddleware implements MiddlewareInterface
         $server = $request->getServerParams();
         $method = strtoupper($server['request_method']);
         $path = strtolower($server['path_info']);
-        if ($user['uid'] === config('super_admin') || (Enforcer::enforce($user['username'], $path, $method))) {
+        if ($user['uid'] == config('super_admin') || (Enforcer::enforce($user['username'], $path, $method))) {
             return $handler->handle($request);
         }
 
-        return $this->response->withStatus(403)->json(CodeConstants::CASBIN_ERROR);
+        return $this->response->withStatus(401)->json(CodeConstants::CASBIN_ERROR);
     }
 }

@@ -17,9 +17,10 @@ use Hyperf\DbConnection\Model\Model;
  * @property int $id
  * @property int $parent_id
  * @property int $is_display
+ * @property string $route
  * @property string $path
  * @property string $method
- * @property string $display_name
+ * @property string $name
  * @property string $url
  * @property string $validate
  * @property string $description
@@ -39,7 +40,7 @@ class Permission extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'parent_id', 'path', 'method', 'display_name', 'url', 'validate', 'description', 'sort'];
+    protected $fillable = ['id', 'parent_id', 'route', 'path', 'method', 'name', 'url', 'validate', 'description', 'sort'];
 
     /**
      * The attributes that should be cast to native types.

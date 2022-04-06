@@ -20,19 +20,12 @@ class PermissionService extends AbstractController
      * FunctionName：list
      * Description：
      * Author：zhangkang.
-     * @param $menuid
      * @return array
      */
-    public function list($menuid): array
+    public function list(): array
     {
-        if ($menuid) {
-            $list = Permission::query()->where('id', $menuid)->first();
-            if (isset($list['parent_id'])) {
-                $list['parent_id'] = $list['parent_id'] ? explode(',', $list['parent_id']) : [];
-            }
-        } else {
-            $list = Permission::query()->orderByDesc('id')->get()->toArray();
-        }
+
+        $list = Permission::query()->orderBy('id')->get()->toArray();
 
         return $this->buildSuccess($list);
     }

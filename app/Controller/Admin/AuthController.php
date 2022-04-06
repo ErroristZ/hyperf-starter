@@ -85,4 +85,16 @@ class AuthController
     {
         return $this->service->initialization($this->request);
     }
+
+    /**
+     * FunctionName：routers
+     * Description：获取权限.
+     * @GetMapping(path="routers")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function routers(): array
+    {
+        return $this->service->routers($this->request);
+    }
 }

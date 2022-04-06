@@ -44,6 +44,7 @@
         "hyperf/swagger": "^2.2",
         "hyperf/utils": "^2.2",
         "hyperf/validation": "^2.2",
+        "hyperf/websocket-server": "^2.2",
         "limingxinleo/hyperf-utils": "^3.3",
         "lysice/hyperf-redis-lock": "^2.1",
         "overtrue/flysystem-qiniu": "^2.0",

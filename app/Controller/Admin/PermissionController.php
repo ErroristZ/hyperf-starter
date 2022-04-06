@@ -13,12 +13,14 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Admin\PermissionService;
+use App\Middleware\CasbinMiddleware;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/menu")
+ * @Middleware(CasbinMiddleware::class)
  * Class AuthController
  */
 class PermissionController extends AbstractController
@@ -32,18 +34,6 @@ class PermissionController extends AbstractController
      */
     public function list(PermissionService $service): array
     {
-        $params = [
-            'menuid' => $this->request->input('menuid') ?? 0,
-        ];
-
-        $rules = [
-            'menuid' => 'required',
-        ];
-        $message = [
-            'menuid.required' => ' menuid',
-        ];
-        $this->validate($params, $rules, $message);
-
-        return $service->list($this->request->input('menuid'));
+        return $service->list();
     }
 }

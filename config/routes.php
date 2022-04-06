@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
+use App\Controller\WebSocketController;
+
 /**
  * This file is part of Hyperf.
  *
@@ -15,4 +18,8 @@ Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@i
 
 Router::get('/favicon.ico', function () {
     return '';
+});
+
+Router::addServer('ws', function () {
+    Router::get('/message', WebSocketController::class);
 });

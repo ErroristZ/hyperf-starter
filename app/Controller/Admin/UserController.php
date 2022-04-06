@@ -13,12 +13,14 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Admin\UserService;
+use App\Middleware\CasbinMiddleware;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/user")
+ * @Middleware(CasbinMiddleware::class)
  * Class AuthController
  */
 class UserController extends AbstractController

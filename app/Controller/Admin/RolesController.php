@@ -13,12 +13,14 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Admin\RolesService;
+use App\Middleware\CasbinMiddleware;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/role")
+ * @Middleware(CasbinMiddleware::class)
  * Class AuthController
  */
 class RolesController extends AbstractController

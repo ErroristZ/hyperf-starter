@@ -26,7 +26,7 @@ class CreatePermissionsTable extends Migration
             $table->tinyInteger('is_display')->comment('上级权限');
             $table->string('path', '255');
             $table->string('method', '10');
-            $table->string('display_name', '255');
+            $table->string('name', '255');
             $table->string('url', '255')->comment('别名，配合前端连接');
             $table->text('validate')->comment('附加验证规则');
             $table->string('description', '255')->comment('附加验证规则');

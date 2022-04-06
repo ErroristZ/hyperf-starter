@@ -71,6 +71,7 @@ class UserService extends AbstractController
      * Description：
      * Author：zhangkang.
      * @param $request
+     * @return array
      */
     public function list($request): array
     {

@@ -15,6 +15,7 @@ use App\Exception\BusinessException;
 use App\Traits\ApiTrait;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
+use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Phper666\JWTAuth\Exception\JWTException;
 use Phper666\JWTAuth\Exception\TokenValidException;
@@ -40,8 +41,14 @@ class AppExceptionHandler extends ExceptionHandler
         $message = '服务器错误 ' . $throwable->getMessage() . ':: FILE:' . $throwable->getFile() . ':: LINE: ' . $throwable->getLine();
 
         if ($throwable instanceof TokenValidException) {
+            $data = json_encode([
+                'code' => 403,
+                'message' => $throwable->getMessage(),
+            ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             $this->stopPropagation();
-            return $this->error($throwable->getCode(), $throwable->getMessage());
+            return $response->withHeader('Server', 'Hyperf')
+                ->withAddedHeader('content-type', 'application/json; charset=utf-8')
+                ->withStatus(403)->withBody(new SwooleStream($data));
         }
 
         if ($throwable instanceof JWTException) {

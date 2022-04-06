@@ -35,13 +35,14 @@ class AuthService extends AbstractController
      * Description：登录
      * Author：zhangkang.
      * @param $request
+     * @return array
      * @throws InvalidArgumentException
      * @throws JsonException
      */
     public function login($request): array
     {
         if (UserService::checkUser($request) === true) {
-            $user = User::query()->where('name', $request->input('name'))->first(['id', 'username', 'status']);
+            $user = User::query()->where('name', $request->input('name'))->first(['id', 'username', 'avatar', 'nickname', 'position']);
 
             if ($user->status == UserCode::STATUS_ENABLE) {
                 return $this->buildFailed(CodeConstants::SERVICE_LOGIN_STATUS_ERROR);
@@ -99,8 +100,26 @@ class AuthService extends AbstractController
         $user['timeFix'] = getHello() . '，' . $user->nickname . '，欢迎回来';
 
         $data = [
-            'user_info' => $user,
-            'permission' => $this->getMenuList($user),
+            'user_info' => $user
+        ];
+        return $this->buildSuccess($data);
+    }
+
+    /**
+     * FunctionName：routers
+     * Description：
+     * Author：zhangkang
+     * @param $request
+     * @return array
+     */
+    public function routers($request): array
+    {
+
+        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'avatar', 'nickname', 'position']);
+
+        $data = [
+            'menu' => Permission::query()->orderBy('id')->get()->toArray(),
+            'permissions' => $this->getMenuList($user),
         ];
         return $this->buildSuccess($data);
     }

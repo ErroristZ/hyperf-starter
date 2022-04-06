@@ -19,7 +19,7 @@ return [
         'client_id' => '',
         'max_write_attempts' => 3,
         'bootstrap_servers' => [
-            env('KAFKA_HOST', '127.0.0.1') . ':9092',
+            env('KAFKA_HOST', 'kafka') . ':9092',
         ],
         'acks' => -1,
         'producer_id' => -1,
