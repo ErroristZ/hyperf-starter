@@ -41,13 +41,13 @@ class AuthService extends AbstractController
     public function login($request): array
     {
         if (UserService::checkUser($request) === true) {
-            $user = User::query()->where('name', $request->input('name'))->first(['id', 'username', 'avatar', 'nickname', 'position']);
+            $user = User::query()->where('name', $request->input('name'))->first(['id', 'name', 'username', 'avatar', 'nickname', 'position']);
 
             if ($user->status == UserCode::STATUS_ENABLE) {
                 return $this->buildFailed(CodeConstants::SERVICE_LOGIN_STATUS_ERROR);
             }
 
-            $token = $this->jwt->getToken('default', ['uid' => $user->id, 'username' => $user->username]);
+            $token = $this->jwt->getToken('default', ['uid' => $user->id, 'name' => $user->name]);
             $data = [
                 'token' => $token->toString(),
                 'expireAt' => $this->jwt->getTTL($token->toString()),
@@ -112,7 +112,7 @@ class AuthService extends AbstractController
      */
     public function routers($request): array
     {
-        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'avatar', 'nickname', 'position']);
+        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'name', 'avatar', 'nickname', 'position']);
 
         $data = [
             'menu' => Permission::query()->orderBy('id')->get()->toArray(),
@@ -136,25 +136,26 @@ class AuthService extends AbstractController
         // 判断当前登录用户是否为超级管理员,如果是的话返回所有权限
         if ($user->id == config('super_admin')) {
             $permission = Permission::query()->orderBy('sort', 'asc')->get()->toArray();
-
-            $permission = arrayGroupBy($permission, 'menuType');
-
-            $arrMenu = issetArrKey($permission, 1, []);
-            $arrMenuFormat = arrayValueToKey($arrMenu, 'id');
-
-            $arrPermissionsNew = [];
-
-            $arrPermissions = issetArrKey($permission, 2, []);
-            $arrPermissionsFormat = arrayGroupBy($arrPermissions, 'parent_id');
-
-            foreach ($arrMenuFormat as $k => $v) {
-                $arrPermissionsNew[] = [
-                    'id' => $v['description'],
-                    'operation' => array_column(issetArrKey($arrPermissionsFormat, $k, []), 'description'),
-                ];
-            }
         } else {
-            $arrPermissionsNew = Enforcer::GetImplicitPermissionsForUser($user->username);
+            $where = [];
+            $arrPermissionsNew = Enforcer::GetImplicitPermissionsForUser($user->name);
+            foreach ($arrPermissionsNew as $k => $v) {
+                $where[$k] = $v[1];
+            }
+
+            $permission = Permission::query()->whereIn('description', $where)->orderBy('sort', 'asc')->get()->toArray();
+        }
+        $permission = arrayGroupBy($permission, 'menuType');
+        $arrMenu = issetArrKey($permission, 1, []);
+        $arrMenuFormat = arrayValueToKey($arrMenu, 'id');
+        $arrPermissionsNew = [];
+        $arrPermissions = issetArrKey($permission, 2, []);
+        $arrPermissionsFormat = arrayGroupBy($arrPermissions, 'parent_id');
+        foreach ($arrMenuFormat as $k => $v) {
+            $arrPermissionsNew[] = [
+                'id' => $v['description'],
+                'operation' => array_column(issetArrKey($arrPermissionsFormat, $k, []), 'description'),
+            ];
         }
 
         return $arrPermissionsNew;

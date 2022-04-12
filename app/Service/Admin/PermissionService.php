@@ -46,7 +46,7 @@ class PermissionService extends AbstractController
     public function add($request): array
     {
         $arrSet = [
-            'parent_id' => $request->input('parent_id') ?? '',
+            'parent_id' => $request->input('parent_id') ?? 0,
             'name' => $request->input('name'),
             'icon' => $request->input('icon') ?? '',
             'route' => $request->input('route') ?? '',
@@ -72,7 +72,7 @@ class PermissionService extends AbstractController
     public function edit($request): array
     {
         $arrSet = [
-            'parent_id' => $request->input('parent_id') ?? '',
+            'parent_id' => $request->input('parent_id') ?? 0,
             'name' => $request->input('name'),
             'icon' => $request->input('icon') ?? '',
             'route' => $request->input('route') ?? '',
@@ -85,6 +85,32 @@ class PermissionService extends AbstractController
         ];
 
         Permission::query()->where('id', $request->input('id'))->update($arrSet);
+
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function delete($request): array
+    {
+        Permission::query()->where('id', $request->input('id'))->delete();
+
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：update
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function update($request): array
+    {
+        Permission::query()->where('id', $request->input('id'))->update(['is_display' => $request->input('is_display')]);
 
         return $this->buildSuccess();
     }

@@ -77,7 +77,29 @@ class UserService extends AbstractController
         $page = (int) $request->input('page', 1);
         $limit = (int) $request->input('limit', 10);
 
-        $list = User::query()->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
+        $list = User::query();
+
+        if ($request->input('nickname')) {
+            $list->where('nickname', 'like', "%{$request->input('nickname')}%");
+        }
+
+        if ($request->input('mobile')) {
+            $list->where('mobile', 'like', "%{$request->input('mobile')}%");
+        }
+
+        if ($request->input('username')) {
+            $list->where('username', 'like', "%{$request->input('username')}%");
+        }
+
+        if ($request->input('status')) {
+            $list->where('status', $request->input('status'));
+        }
+
+        if ($request->input('created_at')) {
+            $list->where('created_at', $request->input('created_at'));
+        }
+
+        $list = $list->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
 
         foreach ($list as $key => $value) {
             $list[$key]['roleIds'] = Enforcer::getRolesForUser($value->name);

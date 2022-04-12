@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Constants\CodeConstants;
+use App\Model\Permission;
 use Donjan\Casbin\Enforcer;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
@@ -46,7 +47,18 @@ class CasbinMiddleware implements MiddlewareInterface
         $server = $request->getServerParams();
         $method = strtoupper($server['request_method']);
         $path = strtolower($server['path_info']);
-        if ($user['uid'] == config('super_admin') || (Enforcer::enforce($user['username'], $path, $method))) {
+
+        if ($user['uid'] == config('super_admin')) {
+            return $handler->handle($request);
+        }
+
+        $description = Permission::query()->where(['path' => $path, 'method' => $method])->value('description');
+
+        if (empty($description)) {
+            return $this->response->withStatus(401)->json(CodeConstants::CASBIN_ERROR);
+        }
+
+        if ((Enforcer::enforce($user['name'], $description, $method))) {
             return $handler->handle($request);
         }
 

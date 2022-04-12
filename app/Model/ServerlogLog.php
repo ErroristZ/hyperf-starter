@@ -16,6 +16,7 @@ use Hyperf\DbConnection\Model\Model;
 /**
  * @property int $id
  * @property int $user_id
+ * @property string $user_name
  * @property string $content
  * @property string $url
  * @property string $ip
@@ -37,7 +38,7 @@ class ServerlogLog extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'content', 'url', 'ip', 'create_time', 'update_time'];
+    protected $fillable = ['id', 'user_id', 'user_name', 'content', 'url', 'ip', 'create_time', 'update_time'];
 
     /**
      * The attributes that should be cast to native types.

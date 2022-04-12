@@ -13,6 +13,7 @@ namespace App\Exception\Handler;
 
 use App\Exception\BusinessException;
 use App\Traits\ApiTrait;
+use Donjan\Casbin\Exceptions\UnauthorizedException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -54,6 +55,10 @@ class AppExceptionHandler extends ExceptionHandler
         if ($throwable instanceof JWTException) {
             $this->stopPropagation();
             return $this->error($throwable->getCode(), $throwable->getMessage());
+        }
+
+        if ($throwable instanceof UnauthorizedException) {
+            $this->stopPropagation();
         }
 
         if ($throwable instanceof BusinessException) {

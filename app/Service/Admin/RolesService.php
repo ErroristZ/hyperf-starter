@@ -15,6 +15,7 @@ use App\Controller\AbstractController;
 use App\Model\Permission;
 use App\Model\Role;
 use App\Model\RolePermission;
+use Donjan\Casbin\Enforcer;
 
 class RolesService extends AbstractController
 {
@@ -29,7 +30,13 @@ class RolesService extends AbstractController
         $page = (int) $request->input('page', 1);
         $limit = (int) $request->input('limit', 10);
 
-        $list = Role::query()->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
+        $list = Role::query();
+
+        if ($request->input('name')) {
+            $list->where('name', 'like', "%{$request->input('name')}%");
+        }
+
+        $list = $list->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
 
         return $this->paginate($list);
     }
@@ -91,12 +98,15 @@ class RolesService extends AbstractController
      */
     public function setRolePermissions($request): array
     {
+        $name = Role::query()->where('id', $request->input('roleId'))->value('name');
+
         $arrOperationBefore = RolePermission::query()->where([
             'roleId' => $request->input('roleId'),
         ])->get(['menuId', 'pseudoChecked'])->toArray();
 
         if ($arrOperationBefore) {
             RolePermission::query()->where('roleId', $request->input('roleId'))->delete();
+            Enforcer::deletePermissionsForUser($name);
         }
 
         $arrSet = [];
@@ -106,11 +116,31 @@ class RolesService extends AbstractController
                 'menuId' => $v['menuId'],
                 'pseudoChecked' => intval($v['pseudoChecked']),
             ];
+
+            if ($v['menuId']) {
+                $item = Permission::query()->where('id', $v['menuId'])->first(['description', 'method']);
+
+                Enforcer::addPermissionForUser($name, $item->description, $item->method);
+            }
         }
 
         if ($arrSet) {
             RolePermission::insert($arrSet);
         }
+
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function delete($request): array
+    {
+        Role::query()->where('id', $request->input('id'))->delete();
+
         return $this->buildSuccess();
     }
 }

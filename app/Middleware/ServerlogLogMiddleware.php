@@ -48,10 +48,9 @@ class ServerlogLogMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $uid = JWTUtil::getParserData($this->request)['uid'] ?? 0;
-
         $data = [
-            'user_id' => $uid,
+            'user_id' => JWTUtil::getParserData($this->request)['uid'] ?? 0,
+            'user_name' => JWTUtil::getParserData($this->request)['name'] ?? '',
             'url' => $this->request->getRequestUri(),
             'ip' => $this->request->server('remote_addr'),
             'content' => json_encode($this->request->all(), JSON_THROW_ON_ERROR),

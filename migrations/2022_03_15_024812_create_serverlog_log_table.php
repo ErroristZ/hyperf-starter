@@ -23,6 +23,7 @@ class CreateServerlogLogTable extends Migration
         Schema::create('serverlog_log', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id')->comment('用户标识');
+            $table->string('user_name')->nullable()->comment('用户名称');
             $table->json('content')->comment('操作');
             $table->string('url', '255')->comment('访问地址');
             $table->ipAddress('ip', '15')->comment('访问ip');

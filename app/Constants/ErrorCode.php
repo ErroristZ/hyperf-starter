@@ -45,6 +45,11 @@ class ErrorCode extends AbstractConstants
     public const FILE_ERROR = 10001;
 
     /**
+     * @Message("验证异常！")
+     */
+    public const ERR_VALIDATION = 3002;
+
+    /**
      * @Message("参数非法")
      */
     public const PARAMS_INVALID = 1000;
@@ -56,5 +61,6 @@ class ErrorCode extends AbstractConstants
         self::SYSTEM_INVALID => '系统参数错误',
         self::PARAMS_INVALID => '参数非法',
         self::FILE_ERROR => '检查文件是否存在',
+        self::ERR_VALIDATION => '验证异常',
     ];
 }

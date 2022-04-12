@@ -49,7 +49,7 @@ trait ValidationTrait
     {
         $validator = $this->validationFactory->make(...$arg);
         if ($validator->fails()) {
-            throw new BusinessException((int) $validator->errors()->first(), ErrorCode::MESSAGES[ErrorCode::PARAMS_INVALID]);
+            throw new BusinessException(ErrorCode::ERR_VALIDATION, $validator->errors()->first());
         }
     }
 }

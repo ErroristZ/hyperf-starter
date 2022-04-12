@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Controller\Admin;
 
+use App\Middleware\ServerlogLogMiddleware;
 use App\Request\UserResquest;
 use App\Service\Admin\AuthService;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -54,6 +55,7 @@ class AuthController
      * Description：刷新jwt.
      * @PostMapping(path="refresh")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * @Middleware(ServerlogLogMiddleware::class)
      * Author：zhangkang.
      * @throws InvalidArgumentException
      */
@@ -79,6 +81,7 @@ class AuthController
      * Description：初始化操作.
      * @GetMapping(path="initialization")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * @Middleware(ServerlogLogMiddleware::class)
      * Author：zhangkang.
      */
     public function initialization(): array
@@ -91,6 +94,7 @@ class AuthController
      * Description：获取权限.
      * @GetMapping(path="routers")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * @Middleware(ServerlogLogMiddleware::class)
      * Author：zhangkang.
      */
     public function routers(): array

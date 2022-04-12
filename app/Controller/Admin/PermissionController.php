@@ -13,7 +13,9 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Middleware\CasbinMiddleware;
+use App\Middleware\ServerlogLogMiddleware;
 use App\Service\Admin\PermissionService;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -23,6 +25,7 @@ use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/menu")
  * @Middleware(CasbinMiddleware::class)
+ * @Middleware(ServerlogLogMiddleware::class)
  * Class AuthController
  */
 class PermissionController extends AbstractController
@@ -115,5 +118,54 @@ class PermissionController extends AbstractController
         ];
         $this->validate($params, $rules, $message);
         return $service->edit($this->request);
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：.
+     * @DeleteMapping(path="delete")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function delete(PermissionService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+        ];
+        $message = [
+            'id.required' => ' ID缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->delete($this->request);
+    }
+
+    /**
+     * FunctionName：update
+     * Description：.
+     * @PutMapping(path="update")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function update(PermissionService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+            'is_display' => $this->request->input('is_display'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+            'is_display' => 'required',
+        ];
+        $message = [
+            'id.required' => 'ID缺失',
+            'is_display.required' => '状态缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->update($this->request);
     }
 }

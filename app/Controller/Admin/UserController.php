@@ -13,6 +13,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Middleware\CasbinMiddleware;
+use App\Middleware\ServerlogLogMiddleware;
 use App\Service\Admin\UserService;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -23,6 +24,7 @@ use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/user")
  * @Middleware(CasbinMiddleware::class)
+ * @Middleware(ServerlogLogMiddleware::class)
  * Class AuthController
  */
 class UserController extends AbstractController
@@ -39,9 +41,6 @@ class UserController extends AbstractController
         $params = [
             'page' => $this->request->input('page') ?? 1,
             'limit' => $this->request->input('limit') ?? 10,
-            'name' => $this->request->input('name') ?? '',
-            'status' => $this->request->input('status') ?? '',
-            'createTime' => $this->request->input('createTime') ?? '',
         ];
 
         $rules = [

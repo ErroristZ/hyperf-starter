@@ -13,7 +13,9 @@ namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Middleware\CasbinMiddleware;
+use App\Middleware\ServerlogLogMiddleware;
 use App\Service\Admin\RolesService;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -23,6 +25,7 @@ use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 /**
  * @\Hyperf\HttpServer\Annotation\Controller(prefix="staff/role")
  * @Middleware(CasbinMiddleware::class)
+ * @Middleware(ServerlogLogMiddleware::class)
  * Class AuthController
  */
 class RolesController extends AbstractController
@@ -39,9 +42,6 @@ class RolesController extends AbstractController
         $params = [
             'page' => $this->request->input('page') ?? 1,
             'limit' => $this->request->input('limit') ?? 10,
-            'name' => $this->request->input('name') ?? '',
-            'status' => $this->request->input('status') ?? '',
-            'createTime' => $this->request->input('createTime') ?? '',
         ];
 
         $rules = [
@@ -155,5 +155,28 @@ class RolesController extends AbstractController
         ];
         $this->validate($params, $rules, $message);
         return $service->setRolePermissions($this->request);
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：.
+     * @DeleteMapping(path="delete")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function delete(RolesService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+        ];
+        $message = [
+            'id.required' => ' ID缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->delete($this->request);
     }
 }
