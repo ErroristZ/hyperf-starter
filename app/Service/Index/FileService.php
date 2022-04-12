@@ -30,6 +30,8 @@ class FileService extends AbstractController
 
         if (empty($factory->get('qiniu')->fileExists($filename))) {
             $factory->get('qiniu')->write($filename, file_get_contents($params->getRealPath()));
+        } else {
+            return $this->buildFailed(CodeConstants::FILE_QIQIUYUN_ERROR);
         }
 
         Attachment::query()->create([

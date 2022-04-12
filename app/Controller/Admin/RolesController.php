@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
-use App\Service\Admin\RolesService;
 use App\Middleware\CasbinMiddleware;
+use App\Service\Admin\RolesService;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 
 /**
@@ -52,5 +54,106 @@ class RolesController extends AbstractController
         ];
         $this->validate($params, $rules, $message);
         return $service->list($this->request);
+    }
+
+    /**
+     * FunctionName：add
+     * Description：.
+     * @PostMapping(path="add")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function add(RolesService $service): array
+    {
+        $params = [
+            'name' => $this->request->input('name'),
+            'description' => $this->request->input('description'),
+        ];
+
+        $rules = [
+            'name' => 'required',
+            'description' => 'required',
+        ];
+        $message = [
+            'name.required' => ' 角色名称缺失',
+            'description.required' => ' 描述缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->add($this->request);
+    }
+
+    /**
+     * FunctionName：update
+     * Description：.
+     * @PutMapping(path="update")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function update(RolesService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+            'name' => $this->request->input('name'),
+            'description' => $this->request->input('description'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+        ];
+        $message = [
+            'id.required' => ' ID缺失',
+            'name.required' => ' 角色名称缺失',
+            'description.required' => ' 描述缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->update($this->request);
+    }
+
+    /**
+     * FunctionName：revealRolePermissions
+     * Description：.
+     * @GetMapping(path="allotPermissions")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function revealRolePermissions(RolesService $service): array
+    {
+        $params = [
+            'roleId' => $this->request->input('roleId'),
+        ];
+
+        $rules = [
+            'roleId' => 'required',
+        ];
+        $message = [
+            'roleId.required' => ' ID缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->revealRolePermissions($this->request);
+    }
+
+    /**
+     * FunctionName：setRolePermissions
+     * Description：.
+     * @PostMapping(path="setRolePermissions")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function setRolePermissions(RolesService $service): array
+    {
+        $params = [
+            'roleId' => $this->request->input('roleId'),
+        ];
+
+        $rules = [
+            'roleId' => 'required',
+        ];
+        $message = [
+            'roleId.required' => ' ID缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->setRolePermissions($this->request);
     }
 }

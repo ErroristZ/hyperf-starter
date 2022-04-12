@@ -39,20 +39,6 @@ trait ApiTrait
     protected ResponseInterface $response;
 
     /**
-     * FunctionName：buildSuccess
-     * Description：成功返回
-     * Author：zhangkang.
-     */
-    public function buildSuccess(array $data = [], string $message = ErrorCode::MESSAGES[ErrorCode::SUCCESS], int $code = ErrorCode::SUCCESS): array
-    {
-        return [
-            'code' => $code,
-            'message' => $message,
-            'data' => $data,
-        ];
-    }
-
-    /**
      * FunctionName：buildFailed
      * Description：失败返回
      * Author：zhangkang.
@@ -84,6 +70,21 @@ trait ApiTrait
         ];
 
         return $this->buildSuccess($data);
+    }
+
+    /**
+     * FunctionName：buildSuccess
+     * Description：成功返回
+     * Author：zhangkang.
+     * @param mixed $data
+     */
+    public function buildSuccess($data = '', string $message = ErrorCode::MESSAGES[ErrorCode::SUCCESS], int $code = ErrorCode::SUCCESS): array
+    {
+        return [
+            'code' => $code,
+            'message' => $message,
+            'data' => $data,
+        ];
     }
 
     /**

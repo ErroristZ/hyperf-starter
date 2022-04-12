@@ -17,17 +17,19 @@ use Hyperf\DbConnection\Model\Model;
  * @property int $id
  * @property int $parent_id
  * @property int $is_display
+ * @property int $menuType
  * @property string $route
  * @property string $path
  * @property string $method
  * @property string $name
- * @property string $url
- * @property string $validate
  * @property string $description
  * @property int $sort
+ * @property string $icon
  */
 class Permission extends Model
 {
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
      *
@@ -40,12 +42,12 @@ class Permission extends Model
      *
      * @var array
      */
-    protected $fillable = ['id', 'parent_id', 'route', 'path', 'method', 'name', 'url', 'validate', 'description', 'sort'];
+    protected $fillable = ['id', 'parent_id', 'route', 'is_display', 'menuType', 'path', 'method', 'name', 'description', 'sort', 'icon'];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['id' => 'int', 'parent_id' => 'integer', 'is_display' => 'integer', 'sort' => 'integer'];
+    protected $casts = ['id' => 'int', 'parent_id' => 'integer', 'is_display' => 'integer', 'menuType' => 'integer', 'sort' => 'integer'];
 }

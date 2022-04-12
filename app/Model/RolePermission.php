@@ -14,32 +14,30 @@ namespace App\Model;
 use Hyperf\DbConnection\Model\Model;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $description
+ * @property int $roleId
+ * @property int $menuId
+ * @property int $pseudoChecked
  */
-class Role extends Model
+class RolePermission extends Model
 {
-    public $timestamps = false;
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'roles';
+    protected $table = 'role_permissions';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['id', 'name', 'description'];
+    protected $fillable = ['roleId', 'menuId', 'pseudoChecked'];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['id' => 'int'];
+    protected $casts = ['roleId' => 'integer', 'menuId' => 'integer', 'pseudoChecked' => 'integer'];
 }

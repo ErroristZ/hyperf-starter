@@ -35,7 +35,6 @@ class AuthService extends AbstractController
      * Description：登录
      * Author：zhangkang.
      * @param $request
-     * @return array
      * @throws InvalidArgumentException
      * @throws JsonException
      */
@@ -100,7 +99,7 @@ class AuthService extends AbstractController
         $user['timeFix'] = getHello() . '，' . $user->nickname . '，欢迎回来';
 
         $data = [
-            'user_info' => $user
+            'user_info' => $user,
         ];
         return $this->buildSuccess($data);
     }
@@ -108,13 +107,11 @@ class AuthService extends AbstractController
     /**
      * FunctionName：routers
      * Description：
-     * Author：zhangkang
+     * Author：zhangkang.
      * @param $request
-     * @return array
      */
     public function routers($request): array
     {
-
         $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'avatar', 'nickname', 'position']);
 
         $data = [
@@ -139,10 +136,27 @@ class AuthService extends AbstractController
         // 判断当前登录用户是否为超级管理员,如果是的话返回所有权限
         if ($user->id == config('super_admin')) {
             $permission = Permission::query()->orderBy('sort', 'asc')->get()->toArray();
+
+            $permission = arrayGroupBy($permission, 'menuType');
+
+            $arrMenu = issetArrKey($permission, 1, []);
+            $arrMenuFormat = arrayValueToKey($arrMenu, 'id');
+
+            $arrPermissionsNew = [];
+
+            $arrPermissions = issetArrKey($permission, 2, []);
+            $arrPermissionsFormat = arrayGroupBy($arrPermissions, 'parent_id');
+
+            foreach ($arrMenuFormat as $k => $v) {
+                $arrPermissionsNew[] = [
+                    'id' => $v['description'],
+                    'operation' => array_column(issetArrKey($arrPermissionsFormat, $k, []), 'description'),
+                ];
+            }
         } else {
-            $permission = Enforcer::GetImplicitPermissionsForUser($user->username);
+            $arrPermissionsNew = Enforcer::GetImplicitPermissionsForUser($user->username);
         }
 
-        return $permission;
+        return $arrPermissionsNew;
     }
 }

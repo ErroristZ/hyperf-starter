@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
-use App\Service\Admin\PermissionService;
 use App\Middleware\CasbinMiddleware;
+use App\Service\Admin\PermissionService;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
 use Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware;
 
 /**
@@ -35,5 +37,83 @@ class PermissionController extends AbstractController
     public function list(PermissionService $service): array
     {
         return $service->list();
+    }
+
+    /**
+     * FunctionName：menu
+     * Description：查询菜单
+     * Author：zhangkang.
+     * @GetMapping(path="menu")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     */
+    public function menu(PermissionService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+        ];
+        $message = [
+            'id.required' => ' ID缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->menu($this->request);
+    }
+
+    /**
+     * FunctionName：add
+     * Description：添加菜单
+     * Author：zhangkang.
+     * @PostMapping(path="add")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     */
+    public function add(PermissionService $service): array
+    {
+        $params = [
+            'name' => $this->request->input('name'),
+            'description' => $this->request->input('description'),
+        ];
+
+        $rules = [
+            'name' => 'required',
+            'description' => 'required',
+        ];
+        $message = [
+            'name.required' => '菜单名称缺失',
+            'description.required' => '权限辨别缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->add($this->request);
+    }
+
+    /**
+     * FunctionName：edit
+     * Description：编辑菜单
+     * Author：zhangkang.
+     * @PutMapping(path="edit")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     */
+    public function edit(PermissionService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+            'name' => $this->request->input('name'),
+            'description' => $this->request->input('description'),
+        ];
+
+        $rules = [
+            'id' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+        ];
+        $message = [
+            'id.required' => 'ID缺失',
+            'name.required' => '菜单名称缺失',
+            'description.required' => '权限辨别缺失',
+        ];
+        $this->validate($params, $rules, $message);
+        return $service->edit($this->request);
     }
 }

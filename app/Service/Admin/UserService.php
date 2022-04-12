@@ -71,7 +71,6 @@ class UserService extends AbstractController
      * Description：
      * Author：zhangkang.
      * @param $request
-     * @return array
      */
     public function list($request): array
     {
@@ -85,5 +84,76 @@ class UserService extends AbstractController
         }
 
         return $this->paginate($list);
+    }
+
+    /**
+     * FunctionName：details
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function details($request): array
+    {
+        return $this->buildSuccess(User::query()->where('id', $request->input('id'))->first());
+    }
+
+    /**
+     * FunctionName：add
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function add($request): array
+    {
+        User::query()->create([
+            'username' => $request->input('username'),
+            'mobile' => $request->input('mobile'),
+            'nickname' => $request->input('nickname'),
+            'password' => password_hash($request->input('password'), PASSWORD_BCRYPT),
+            'status' => $request->input('status'),
+            'name' => $request->input('name'),
+            'position' => $request->input('position'),
+            'email' => $request->input('email'),
+            'ip' => '0.0.0.0',
+        ]);
+
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：update
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function update($request): array
+    {
+        User::query()->where('id', $request->input('id'))->update([
+            'username' => $request->input('username'),
+            'mobile' => $request->input('mobile'),
+            'nickname' => $request->input('nickname'),
+            'avatar' => $request->input('avatar'),
+            'status' => $request->input('status'),
+            'name' => $request->input('name'),
+            'position' => $request->input('position'),
+            'email' => $request->input('email'),
+        ]);
+
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：status
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function status($request): array
+    {
+        User::query()->where('id', $request->input('id'))->update([
+            'status' => $request->input('status'),
+        ]);
+
+        return $this->buildSuccess();
     }
 }

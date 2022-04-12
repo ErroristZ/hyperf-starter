@@ -34,7 +34,7 @@ class CorsMiddleware implements MiddlewareInterface
         $response = $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Headers', 'DNT,Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
 
         Context::set(ResponseInterface::class, $response);
 

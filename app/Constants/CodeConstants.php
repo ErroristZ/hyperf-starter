@@ -17,6 +17,8 @@ class CodeConstants
 
     public const FILE_ERROR = ['code' => 10001, 'message' => '检查文件是否存在'];
 
+    public const FILE_QIQIUYUN_ERROR = ['code' => 10002, 'message' => '文件上传失败'];
+
     public const HTTP_ACTION_COUNT_ERROR = ['code' => 200302, 'message' => '操作频繁'];
 
     public const USER_SERVICE_LOGIN_ERROR = ['code' => 200201, 'message' => '登录失败'];
