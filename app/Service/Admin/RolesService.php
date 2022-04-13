@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Service\Admin;
 
+use App\Constants\CodeConstants;
 use App\Controller\AbstractController;
 use App\Model\Permission;
 use App\Model\Role;
@@ -139,7 +140,16 @@ class RolesService extends AbstractController
      */
     public function delete($request): array
     {
+        $data = Role::query()->where('id', $request->input('id'))->value('name');
+
+        if (empty($data)) {
+            return $this->buildFailed(CodeConstants::CLIENT_DELETED_ERROR);
+        }
+
         Role::query()->where('id', $request->input('id'))->delete();
+
+        Enforcer::deleteRole($data);
+        Enforcer::deletePermissionsForUser($data);
 
         return $this->buildSuccess();
     }

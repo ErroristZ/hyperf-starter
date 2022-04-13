@@ -41,7 +41,7 @@ class AuthService extends AbstractController
     public function login($request): array
     {
         if (UserService::checkUser($request) === true) {
-            $user = User::query()->where('name', $request->input('name'))->first(['id', 'name', 'username', 'avatar', 'nickname', 'position']);
+            $user = User::query()->where('name', $request->input('name'))->first(['id', 'name', 'username', 'avatar', 'nickname', 'position', 'status']);
 
             if ($user->status == UserCode::STATUS_ENABLE) {
                 return $this->buildFailed(CodeConstants::SERVICE_LOGIN_STATUS_ERROR);

@@ -28,20 +28,27 @@ class FileService extends AbstractController
 
         $filename = md5(file_get_contents($params->getRealPath())) . '.' . pathinfo($params->getClientFilename())['extension'];
 
-        if (empty($factory->get('qiniu')->fileExists($filename))) {
-            $factory->get('qiniu')->write($filename, file_get_contents($params->getRealPath()));
-        } else {
-            return $this->buildFailed(CodeConstants::FILE_QIQIUYUN_ERROR);
+        $link = Attachment::query()->where('link','like', "%{$filename}%")->value('link');
+
+        if (empty($link)){
+            if (empty($factory->get('qiniu')->fileExists($filename))) {
+                $factory->get('qiniu')->write($filename, file_get_contents($params->getRealPath()));
+            } else {
+                return $this->buildFailed(CodeConstants::FILE_QIQIUYUN_ERROR);
+            }
+
+            $type = $request->input('type') ?? 3;
+
+            Attachment::query()->create([
+                'type' => $type,
+                'link' => config('file.storage.qiniu.domain') . '/' . $filename,
+            ]);
+
+            $link = config('file.storage.qiniu.domain') . '/' . $filename;
         }
 
-        Attachment::query()->create([
-            'type' => $request->input('type'),
-            'link' => config('file.storage.qiniu.domain') . '/' . $filename,
-        ]);
-
         return $this->buildSuccess([
-            'key' => $filename,
-            'url' => config('file.storage.qiniu.domain'),
+            'url' => $link,
         ]);
     }
 }

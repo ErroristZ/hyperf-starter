@@ -43,15 +43,13 @@ class UserController extends AbstractController
             'limit' => $this->request->input('limit') ?? 10,
         ];
 
-        $rules = [
+        $this->validate($params, [
             'page' => 'required',
             'limit' => 'required',
-        ];
-        $message = [
+        ], [
             'page.required' => ' 页数缺失',
             'limit.required' => ' 条数缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->list($this->request);
     }
 
@@ -68,13 +66,12 @@ class UserController extends AbstractController
             'id' => $this->request->input('id'),
         ];
 
-        $rules = [
-            'id' => 'required',
-        ];
-        $message = [
+        $this->validate($params, [
+            'id' => 'required|exists:users,id',
+        ], [
             'id.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->details($this->request);
     }
 
@@ -98,17 +95,16 @@ class UserController extends AbstractController
             'email' => $this->request->input('email'),
         ];
 
-        $rules = [
-            'mobile' => 'required',
+        $this->validate($params, [
+            'mobile' => 'required|unique:users',
             'nickname' => 'required',
             'username' => 'required',
             'status' => 'required',
             'password' => 'required',
-            'name' => 'required',
+            'name' => 'required|unique:users',
             'position' => 'required',
-            'email' => 'required',
-        ];
-        $message = [
+            'email' => 'required|unique:users',
+        ], [
             'mobile.required' => ' 手机号缺失',
             'nickname.required' => ' 姓名缺失',
             'username.required' => ' 用户名缺失',
@@ -117,8 +113,7 @@ class UserController extends AbstractController
             'name.required' => ' 账号缺失',
             'position.required' => ' 职位缺失',
             'email.required' => ' 邮箱缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->add($this->request);
     }
 
@@ -143,8 +138,8 @@ class UserController extends AbstractController
             'email' => $this->request->input('email'),
         ];
 
-        $rules = [
-            'id' => 'required',
+        $this->validate($params, [
+            'id' => 'required|exists:users,id',
             'mobile' => 'required',
             'nickname' => 'required',
             'username' => 'required',
@@ -153,9 +148,9 @@ class UserController extends AbstractController
             'name' => 'required',
             'position' => 'required',
             'email' => 'required',
-        ];
-        $message = [
+        ], [
             'id.required' => ' ID缺失',
+            'id.exists' => ' ID不存在',
             'mobile.required' => ' 手机号缺失',
             'nickname.required' => ' 姓名缺失',
             'username.required' => ' 用户名缺失',
@@ -164,8 +159,7 @@ class UserController extends AbstractController
             'name.required' => ' 账号缺失',
             'position.required' => ' 职位缺失',
             'email.required' => ' 邮箱缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->update($this->request);
     }
 
@@ -183,15 +177,14 @@ class UserController extends AbstractController
             'status' => $this->request->input('status'),
         ];
 
-        $rules = [
-            'id' => 'required',
+        $this->validate($params, [
+            'id' => 'required|exists:users,id',
             'status' => 'required',
-        ];
-        $message = [
+        ], [
             'id.required' => ' ID缺失',
+            'id.exists' => ' ID不存在',
             'status.required' => ' 状态缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->status($this->request);
     }
 }

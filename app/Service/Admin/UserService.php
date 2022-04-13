@@ -116,7 +116,11 @@ class UserService extends AbstractController
      */
     public function details($request): array
     {
-        return $this->buildSuccess(User::query()->where('id', $request->input('id'))->first());
+        $data = User::query()->where('id', $request->input('id'))->first(['id', 'name', 'mobile', 'nickname', 'username', 'email', 'position', 'status', 'avatar']);
+
+        $data['roleIds'] = Enforcer::getRolesForUser($data->name);
+
+        return $this->buildSuccess($data);
     }
 
     /**
@@ -139,6 +143,10 @@ class UserService extends AbstractController
             'ip' => '0.0.0.0',
         ]);
 
+        foreach ($request->input('roleIds') as $v) {
+            Enforcer::addRoleForUser($request->input('name'), $v);
+        }
+
         return $this->buildSuccess();
     }
 
@@ -160,6 +168,14 @@ class UserService extends AbstractController
             'position' => $request->input('position'),
             'email' => $request->input('email'),
         ]);
+
+        /*
+         * 先删除用户所有角色，再次用户添加角色
+         */
+        Enforcer::deleteRolesForUser($request->input('name'));
+        foreach ($request->input('roleIds') as $v) {
+            Enforcer::addRoleForUser($request->input('name'), $v);
+        }
 
         return $this->buildSuccess();
     }

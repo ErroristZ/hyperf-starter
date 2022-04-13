@@ -55,13 +55,12 @@ class PermissionController extends AbstractController
             'id' => $this->request->input('id'),
         ];
 
-        $rules = [
-            'id' => 'required',
-        ];
-        $message = [
+        $this->validate($params, [
+            'id' => 'required|exists:permissions,id',
+        ], [
             'id.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->menu($this->request);
     }
 
@@ -79,15 +78,13 @@ class PermissionController extends AbstractController
             'description' => $this->request->input('description'),
         ];
 
-        $rules = [
+        $this->validate($params, [
             'name' => 'required',
             'description' => 'required',
-        ];
-        $message = [
+        ], [
             'name.required' => '菜单名称缺失',
             'description.required' => '权限辨别缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->add($this->request);
     }
 
@@ -106,17 +103,16 @@ class PermissionController extends AbstractController
             'description' => $this->request->input('description'),
         ];
 
-        $rules = [
-            'id' => 'required',
+        $this->validate($params, [
+            'id' => 'required|exists:permissions,id',
             'name' => 'required',
-            'description' => 'required',
-        ];
-        $message = [
+            'description' => 'required|unique:permissions',
+        ], [
             'id.required' => 'ID缺失',
             'name.required' => '菜单名称缺失',
             'description.required' => '权限辨别缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->edit($this->request);
     }
 
@@ -133,13 +129,12 @@ class PermissionController extends AbstractController
             'id' => $this->request->input('id'),
         ];
 
-        $rules = [
-            'id' => 'required',
-        ];
-        $message = [
+        $this->validate($params, [
+            'id' => 'required|exists:permissions,id',
+        ], [
             'id.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->delete($this->request);
     }
 
@@ -157,15 +152,14 @@ class PermissionController extends AbstractController
             'is_display' => $this->request->input('is_display'),
         ];
 
-        $rules = [
-            'id' => 'required',
+        $this->validate($params, [
+            'id' => 'required|exists:permissions,id',
             'is_display' => 'required',
-        ];
-        $message = [
+        ], [
             'id.required' => 'ID缺失',
             'is_display.required' => '状态缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->update($this->request);
     }
 }

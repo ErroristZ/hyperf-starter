@@ -44,15 +44,13 @@ class RolesController extends AbstractController
             'limit' => $this->request->input('limit') ?? 10,
         ];
 
-        $rules = [
+        $this->validate($params, [
             'page' => 'required',
             'limit' => 'required',
-        ];
-        $message = [
+        ], [
             'page.required' => ' 页数缺失',
             'limit.required' => ' 条数缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->list($this->request);
     }
 
@@ -97,17 +95,16 @@ class RolesController extends AbstractController
             'description' => $this->request->input('description'),
         ];
 
-        $rules = [
-            'id' => 'required',
+        $this->validate($params, [
+            'id' => 'required|exists:roles,id',
             'name' => 'required',
             'description' => 'required',
-        ];
-        $message = [
+        ], [
             'id.required' => ' ID缺失',
             'name.required' => ' 角色名称缺失',
             'description.required' => ' 描述缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->update($this->request);
     }
 
@@ -124,13 +121,11 @@ class RolesController extends AbstractController
             'roleId' => $this->request->input('roleId'),
         ];
 
-        $rules = [
+        $this->validate($params, [
             'roleId' => 'required',
-        ];
-        $message = [
+        ], [
             'roleId.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->revealRolePermissions($this->request);
     }
 
@@ -147,13 +142,11 @@ class RolesController extends AbstractController
             'roleId' => $this->request->input('roleId'),
         ];
 
-        $rules = [
+        $this->validate($params, [
             'roleId' => 'required',
-        ];
-        $message = [
+        ], [
             'roleId.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+        ]);
         return $service->setRolePermissions($this->request);
     }
 
@@ -170,13 +163,12 @@ class RolesController extends AbstractController
             'id' => $this->request->input('id'),
         ];
 
-        $rules = [
-            'id' => 'required',
-        ];
-        $message = [
+        $this->validate($params, [
+            'id' => 'required|exists:roles,id',
+        ], [
             'id.required' => ' ID缺失',
-        ];
-        $this->validate($params, $rules, $message);
+            'id.exists' => ' ID不存在',
+        ]);
         return $service->delete($this->request);
     }
 }
