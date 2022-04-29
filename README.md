@@ -5,4 +5,4 @@
 
 ### admin模块
 
-`hyperf-casbin`+`jwt-auth`+`kafka日志收集`+`七牛云文件上传`
+`hyperf-casbin`+`jwt-auth`+`kafka日志收集`+`七牛云文件上传`+`WebSocke消息通知`
