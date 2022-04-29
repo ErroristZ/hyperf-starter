@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Logs;
 
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
@@ -26,7 +25,7 @@ class Log
      */
     public static function channel(string $name = 'log', string $group = 'default'): LoggerInterface
     {
-        return ApplicationContext::getContainer()->get(LoggerFactory::class)->get($name, $group);
+        return di()->get(LoggerFactory::class)->get($name, $group);
     }
 
     /**

@@ -13,7 +13,6 @@ namespace App\Tools;
 
 use GuzzleHttp\RequestOptions;
 use Hyperf\Guzzle\ClientFactory;
-use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
@@ -26,11 +25,10 @@ class ApiGuzzle
      * Author：zhangkang.
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @return mixed
      */
-    public static function post(array $data, string $url)
+    public static function post(array $data, string $url): mixed
     {
-        $factory = ApplicationContext::getContainer()->get(ClientFactory::class);
+        $factory = di()->get(ClientFactory::class);
         $client = $factory->create(['base_uri' => env('GATEWAY'), 'timeout' => 20]);
 
         try {
@@ -58,9 +56,9 @@ class ApiGuzzle
      * @throws NotFoundExceptionInterface
      * @return mixed|string
      */
-    public static function get(array $data, string $url)
+    public static function get(array $data, string $url): mixed
     {
-        $factory = ApplicationContext::getContainer()->get(ClientFactory::class);
+        $factory = di()->get(ClientFactory::class);
         $client = $factory->create(['base_uri' => env('GATEWAY'), 'timeout' => 20]);
 
         try {

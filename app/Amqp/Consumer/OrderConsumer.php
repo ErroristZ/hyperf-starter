@@ -17,7 +17,6 @@ use Hyperf\Amqp\Annotation\Consumer;
 use Hyperf\Amqp\Builder\QueueBuilder;
 use Hyperf\Amqp\Message\ConsumerMessage;
 use Hyperf\Amqp\Result;
-use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Coroutine;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Container\ContainerExceptionInterface;
@@ -47,7 +46,7 @@ class OrderConsumer extends ConsumerMessage
      */
     public function __construct()
     {
-        $this->server = ApplicationContext::getContainer()->get(Server::class);
+        $this->server = di()->get(Server::class);
 
         // 动态设置 Rabbit MQ 消费队列名称
         $this->setQueue('queue:order:' . SERVER_RUN_ID);

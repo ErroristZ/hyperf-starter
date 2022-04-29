@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Kafka\Consumer;
 
-use App\Model\ServerlogLog;
+use App\Model\ServerlogLogSearchable;
 use Hyperf\Kafka\AbstractConsumer;
 use Hyperf\Kafka\Annotation\Consumer;
 use longlang\phpkafka\Consumer\ConsumeMessage;
@@ -23,6 +23,18 @@ class LogsAddConsumer extends AbstractConsumer
 {
     public function consume(ConsumeMessage $message)
     {
-        ServerlogLog::create(json_decode($message->getValue(), true, 512, JSON_THROW_ON_ERROR));
+        // TODO kafka下同步不了模型全文检索
+        $data = json_decode($message->getValue(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (! empty($data)) {
+            $log = new ServerlogLogSearchable();
+
+            $log->user_id = $data['user_id'];
+            $log->user_name = $data['user_name'];
+            $log->url = $data['url'];
+            $log->ip = $data['ip'];
+            $log->content = $data['content'];
+            $log->save();
+        }
     }
 }

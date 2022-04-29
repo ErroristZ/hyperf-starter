@@ -106,7 +106,7 @@ class PermissionController extends AbstractController
         $this->validate($params, [
             'id' => 'required|exists:permissions,id',
             'name' => 'required',
-            'description' => 'required|unique:permissions',
+            'description' => 'required',
         ], [
             'id.required' => 'ID缺失',
             'name.required' => '菜单名称缺失',

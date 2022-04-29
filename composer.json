@@ -41,6 +41,7 @@
         "hyperf/redis": "^2.2",
         "hyperf/scout": "^2.2",
         "hyperf/session": "^2.2",
+        "hyperf/snowflake": "^2.2",
         "hyperf/swagger": "^2.2",
         "hyperf/utils": "^2.2",
         "hyperf/validation": "^2.2",

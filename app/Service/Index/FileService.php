@@ -28,9 +28,9 @@ class FileService extends AbstractController
 
         $filename = md5(file_get_contents($params->getRealPath())) . '.' . pathinfo($params->getClientFilename())['extension'];
 
-        $link = Attachment::query()->where('link','like', "%{$filename}%")->value('link');
+        $link = Attachment::query()->where('link', 'like', "%{$filename}%")->value('link');
 
-        if (empty($link)){
+        if (empty($link)) {
             if (empty($factory->get('qiniu')->fileExists($filename))) {
                 $factory->get('qiniu')->write($filename, file_get_contents($params->getRealPath()));
             } else {

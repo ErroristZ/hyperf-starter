@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Service\Repository;
 
 use Hyperf\Redis\Redis;
-use Hyperf\Utils\ApplicationContext;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -28,7 +27,7 @@ abstract class AbstractRedis
      */
     public static function getInstance()
     {
-        return ApplicationContext::getContainer()->get(static::class);
+        return di()->get(static::class);
     }
 
     /**
@@ -39,14 +38,13 @@ abstract class AbstractRedis
      */
     protected function redis()
     {
-        return ApplicationContext::getContainer()->get(Redis::class);
+        return di()->get(Redis::class);
     }
 
     /**
      * 获取缓存 KEY.
-     * @param array|string $key
      */
-    protected function getCacheKey($key = ''): string
+    protected function getCacheKey(array|string $key = ''): string
     {
         $params = [$this->prefix, $this->name];
         if (is_array($key)) {

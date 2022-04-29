@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Service\Redis;
 
 use Hyperf\Redis\Redis;
-use Hyperf\Utils\ApplicationContext;
 
 class RedisClientService
 {
@@ -22,15 +21,28 @@ class RedisClientService
     public const BIND_FD_TO_USER = 'iot:list';
 
     /**
+     * @Message("在线用户与Fd绑定关系")
+     */
+    public const ONLINE_USER_FD_KEY = 'online_user_fd_list';
+
+    /**
+     * @Message("Fd与在线用户绑定关系")
+     */
+    public const ONLINE_FD_USER_KEY = 'online_fd_user_list';
+
+    /**
+     * @Message("用户未读的聊天记录")
+     */
+    public const GROUP_CHAT_UNREAD_MESSAGE_BY_USER = 'group_chat_unread_message_user_';
+
+    /**
      * @var Redis
      */
     private $redis;
 
     public function __construct()
     {
-        $container = ApplicationContext::getContainer();
-
-        $this->redis = $container->get(Redis::class);
+        $this->redis = di()->get(Redis::class);
     }
 
     /**
@@ -76,5 +88,40 @@ class RedisClientService
         $this->redis->set(sprintf('%s:%s:%s', self::BIND_FD_TO_USER, $topic, $id), $data);
         $this->redis->expire(sprintf('%s:%s:%s', self::BIND_FD_TO_USER, $topic, $id), 604800); // 缓存
         $this->redis->exec();
+    }
+
+    /**
+     * FunctionName：findUserId
+     * Description：
+     * Author：zhangkang.
+     */
+    public function findUserId(string $fd): bool|\Redis|string
+    {
+        return $this->redis->hGet(self::ONLINE_USER_FD_KEY, $fd);
+    }
+
+    /**
+     * @param $id
+     * @param $fd
+     */
+    public function delUserId($id, $fd): void
+    {
+        $this->redis->hDel(self::ONLINE_USER_FD_KEY, (string) $id);
+        $this->redis->hDel(self::ONLINE_FD_USER_KEY, (string) $fd);
+    }
+
+    /**
+     * FunctionName：savaUserID
+     * Description：
+     * Author：zhangkang.
+     * @param mixed $id
+     * @param mixed $fd
+     */
+    public function savaUserID($id, $fd): void
+    {
+        // 将在线用户放置Redis中
+        $this->redis->hSet(self::ONLINE_USER_FD_KEY, (string) $id, (string) $fd);
+        // 将FD对应在线用户ID放置Redis中
+        $this->redis->hSet(self::ONLINE_FD_USER_KEY, (string) $fd, (string) $id);
     }
 }

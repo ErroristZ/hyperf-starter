@@ -45,8 +45,7 @@ class UserService extends AbstractController
     {
         $userInfo = $request->all();
 
-        if (! $user = User::query()->where('name', $userInfo['name'])
-            ->orWhere('mobile', $userInfo['name'])->first()) {
+        if (! $user = User::query()->where('name', $userInfo['name'])->first()) {
             return false;
         }
 
