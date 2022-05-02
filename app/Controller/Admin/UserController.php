@@ -199,4 +199,43 @@ class UserController extends AbstractController
     {
         return $service->all();
     }
+
+    /**
+     * FunctionName：stting
+     * Description：.
+     * @GetMapping(path="stting")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang
+     */
+    public function stting(UserService $service): array
+    {
+        return $service->stting($this->request);
+    }
+
+    /**
+     * FunctionName：stting
+     * Description：.
+     * @PutMapping(path="stting/update")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang
+     */
+    public function sttingUpdate(UserService $service): array
+    {
+        $params = [
+            'mobile' => $this->request->input('mobile'),
+            'nickname' => $this->request->input('nickname'),
+            'avatar' => $this->request->input('avatar'),
+        ];
+
+        $this->validate($params, [
+            'mobile' => 'required',
+            'nickname' => 'required',
+            'avatar' => 'required',
+        ], [
+            'mobile.required' => ' 手机号缺失',
+            'nickname.required' => ' 用户名缺失',
+            'avatar.required' => ' 头像缺失',
+        ]);
+        return $service->sttingUpdate($this->request);
+    }
 }

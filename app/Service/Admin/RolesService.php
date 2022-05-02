@@ -16,10 +16,18 @@ use App\Controller\AbstractController;
 use App\Model\Permission;
 use App\Model\Role;
 use App\Model\RolePermission;
+use App\Service\Redis\RedisClientService;
 use Donjan\Casbin\Enforcer;
+use Hyperf\Di\Annotation\Inject;
 
 class RolesService extends AbstractController
 {
+    /**
+     * @Inject
+     * @var RedisClientService
+     */
+    protected $redisClientService;
+
     /**
      * FunctionName：list
      * Description：
@@ -128,6 +136,8 @@ class RolesService extends AbstractController
         if ($arrSet) {
             RolePermission::insert($arrSet);
         }
+
+        $this->redisClientService->delete();
 
         return $this->buildSuccess();
     }

@@ -81,8 +81,8 @@ class MessageBusiness
 
         $list = Message::query();
         $list->where('message.type', $intType);
-        $list->where('message.user_id', $user_id);
-        $list->leftJoin('message_user', 'message_user.message_id', 'message.id');
+        $list->where('message_user.user_id', $user_id);
+        $list->join('message_user', 'message_user.message_id', 'message.id');
 
         $arrParam['data'] = [
             'list' => $list->orderByDesc('message.id')->paginate($intLimit, ['*'], 'page', $intPage)->items(),

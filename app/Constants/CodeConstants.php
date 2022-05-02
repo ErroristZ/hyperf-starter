@@ -37,6 +37,8 @@ class CodeConstants
 
     public const CLIENT_DELETED_ERROR = ['code' => 400202, 'message' => '数据不存在'];
 
+    public const ADD_PARAMETER_ERROR = ['code' => 400203, 'message' => '添加失败'];
+
     public const CLIENT_HTTP_UNAUTHORIZED = ['code' => 401001, 'message' => '授权失败，请先登录'];
 
     public const CLIENT_HTTP_UNAUTHORIZED_EXPIRED = ['code' => 401200, 'message' => '账号信息已过期，请重新登录'];

@@ -11,11 +11,14 @@ declare(strict_types=1);
  */
 namespace App\Service\Admin;
 
+use App\Constants\CodeConstants;
 use App\Controller\AbstractController;
 use App\Model\Message;
 use App\Model\MessageUser;
+use Carbon\Carbon;
 use Hyperf\DbConnection\Db;
 use Phper666\JWTAuth\Util\JWTUtil;
+use Throwable;
 
 class MessageService extends AbstractController
 {
@@ -61,24 +64,53 @@ class MessageService extends AbstractController
      */
     public function add($request): array
     {
-        Db::transaction(function ($request) {
-            $mid = Message::insert([
+        Db::beginTransaction();
+        try {
+            $mid = Message::query()->create([
                 'type' => $request->input('type') ?? 1,
                 'title' => $request->input('title'),
                 'content' => $request->input('content') ?? '',
                 'user_id' => JWTUtil::getParserData($request)['uid'],
-                'isRead' => 1,
             ]);
 
             $data = [];
             foreach ($request->input('Ids') as $v) {
                 $data[] = [
-                    'message_id' => $mid,
+                    'message_id' => $mid->id,
                     'user_id' => $v,
+                    'isRead' => 0,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
                 ];
             }
-            MessageUser::insert($data);
-        });
+            MessageUser::query()->insert($data);
+
+            Db::commit();
+        } catch (Throwable $ex) {
+            Db::rollBack();
+            return $this->buildFailed(CodeConstants::ADD_PARAMETER_ERROR);
+        }
+        return $this->buildSuccess();
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function delete($request): array
+    {
+        Db::beginTransaction();
+        try {
+            Message::where('id', $request->input('id'))->delete();
+
+            MessageUser::where('message_id', $request->input('id'))->delete();
+
+            Db::commit();
+        } catch (Throwable $ex) {
+            Db::rollBack();
+        }
 
         return $this->buildSuccess();
     }

@@ -18,7 +18,7 @@ class RedisClientService
     /**
      * fd与用户绑定(使用hash 做处理).
      */
-    public const BIND_FD_TO_USER = 'iot:list';
+    public const BIND_FD_TO_USER = 'routers:list';
 
     /**
      * @Message("在线用户与Fd绑定关系")
@@ -48,9 +48,9 @@ class RedisClientService
     /**
      * 连接数据与设备ID绑定关系.
      * @param string $data 连接数据
-     * @param string $station_id 设备ID
+     * @param int $station_id 设备ID
      */
-    public function binding(string $data, string $station_id): void
+    public function binding(string $data, int $station_id): void
     {
         $this->redis->multi();
         $this->redis->set(sprintf('%s:%s', self::BIND_FD_TO_USER, $station_id), $data);
@@ -60,20 +60,30 @@ class RedisClientService
 
     /**
      * 查询客户端fd对应的用户ID.
-     * @param string $user_id 客户端ID
+     * @param int $user_id 客户端ID
      */
-    public function findFdUserId(string $user_id): int
+    public function findFdUserId(int $user_id)
     {
-        return $this->redis->get(sprintf('%s:%s', self::BIND_FD_TO_USER, $user_id)) ?: 0;
+        return $this->redis->get(sprintf('%s:%s', self::BIND_FD_TO_USER, $user_id));
     }
 
     /**
      * 检测设备Id.
-     * @param string $station_id 用户ID
+     * @param int $station_id 用户ID
      */
-    public function isOnline(string $station_id): bool
+    public function isOnline(int $station_id): bool
     {
-        return (bool) $this->redis->get(sprintf('%s:%s', self::BIND_FD_TO_USER, (string) $station_id));
+        return (bool) $this->redis->get(sprintf('%s:%s', self::BIND_FD_TO_USER, $station_id));
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：
+     * Author：zhangkang.
+     */
+    public function delete(): void
+    {
+        $this->redis->del(self::BIND_FD_TO_USER);
     }
 
     /**
@@ -114,10 +124,8 @@ class RedisClientService
      * FunctionName：savaUserID
      * Description：
      * Author：zhangkang.
-     * @param mixed $id
-     * @param mixed $fd
      */
-    public function savaUserID($id, $fd): void
+    public function savaUserID(mixed $id, mixed $fd): void
     {
         // 将在线用户放置Redis中
         $this->redis->hSet(self::ONLINE_USER_FD_KEY, (string) $id, (string) $fd);

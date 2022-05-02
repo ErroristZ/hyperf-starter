@@ -15,6 +15,7 @@ use App\Controller\AbstractController;
 use App\Middleware\CasbinMiddleware;
 use App\Middleware\ServerlogLogMiddleware;
 use App\Service\Admin\MessageService;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -77,5 +78,27 @@ class MessageController extends AbstractController
             'type.required' => '消息类型缺失',
         ]);
         return $service->add($this->request);
+    }
+
+    /**
+     * FunctionName：delete
+     * Description：.
+     * @DeleteMapping(path="delete")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     * Author：zhangkang.
+     */
+    public function delete(MessageService $service): array
+    {
+        $params = [
+            'id' => $this->request->input('id'),
+        ];
+
+        $this->validate($params, [
+            'id' => 'required|exists:message,id',
+        ], [
+            'id.required' => ' ID缺失',
+            'id.exists' => ' ID不存在',
+        ]);
+        return $service->delete($this->request);
     }
 }

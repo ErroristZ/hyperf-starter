@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
 
 /**
@@ -24,6 +25,8 @@ use Hyperf\DbConnection\Model\Model;
  */
 class MessageUser extends Model
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      *

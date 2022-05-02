@@ -17,6 +17,7 @@ use App\Model\User;
 use Donjan\Casbin\Enforcer;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Phper666\JWTAuth\Util\JWTUtil;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class UserService extends AbstractController
@@ -157,7 +158,7 @@ class UserService extends AbstractController
      */
     public function update($request): array
     {
-        User::query()->where('id', $request->input('id'))->update([
+        User::query()->where('id', JWTUtil::getParserData($request)['uid'])->update([
             'username' => $request->input('username'),
             'mobile' => $request->input('mobile'),
             'nickname' => $request->input('nickname'),
@@ -204,5 +205,42 @@ class UserService extends AbstractController
     {
         $list = User::query()->select('id', 'name', 'mobile', 'nickname')->get();
         return $this->buildSuccess($list);
+    }
+
+    /**
+     * FunctionName：stting
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function stting($request): array
+    {
+        $data = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'mobile', 'nickname', 'avatar']);
+
+        return $this->buildSuccess($data);
+    }
+
+    /**
+     * FunctionName：sttingUpdate
+     * Description：
+     * Author：zhangkang.
+     * @param $request
+     */
+    public function sttingUpdate($request): array
+    {
+        $user = User::query()->find(1);
+
+        $user->where('id', JWTUtil::getParserData($request)['uid']);
+        $user->mobile = $request->input('mobile');
+        $user->nickname = $request->input('nickname');
+        $user->avatar = $request->input('avatar');
+
+        if ($request->input('password')) {
+            $user->password = $request->input('password');
+        }
+
+        $user->save();
+
+        return $this->buildSuccess();
     }
 }

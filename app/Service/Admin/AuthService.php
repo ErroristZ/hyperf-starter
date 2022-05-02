@@ -16,8 +16,10 @@ use App\Constants\UserCode;
 use App\Controller\AbstractController;
 use App\Model\Permission;
 use App\Model\User;
+use App\Service\Redis\RedisClientService;
 use Donjan\Casbin\Enforcer;
 use Hyperf\Di\Annotation\Inject;
+use Hyperf\Utils\Codec\Json;
 use JsonException;
 use Phper666\JWTAuth\JWT;
 use Phper666\JWTAuth\Util\JWTUtil;
@@ -25,6 +27,12 @@ use Psr\SimpleCache\InvalidArgumentException;
 
 class AuthService extends AbstractController
 {
+    /**
+     * @Inject
+     * @var RedisClientService
+     */
+    protected $redisClientService;
+
     /**
      * @Inject
      */
@@ -51,7 +59,8 @@ class AuthService extends AbstractController
             $data = [
                 'token' => $token->toString(),
                 'expireAt' => $this->jwt->getTTL($token->toString()),
-                'timeFix' => getHello() . '，' . $user->nickname . '，欢迎回来',            ];
+                'timeFix' => getHello() . '，' . $user->nickname . '，欢迎回来',
+            ];
 
             return $this->buildSuccess($data);
         }
@@ -112,12 +121,22 @@ class AuthService extends AbstractController
      */
     public function routers($request): array
     {
-        $user = User::query()->where('id', JWTUtil::getParserData($request)['uid'])->first(['id', 'username', 'name', 'avatar', 'nickname', 'position']);
+        $uid = JWTUtil::getParserData($request)['uid'];
+        $isOnline = $this->redisClientService->isOnline($uid);
 
+        if (! empty($isOnline)) {
+            $data = $this->redisClientService->findFdUserId($uid);
+            return $this->buildSuccess(Json::decode($data));
+        }
+
+        $user = User::query()->where('id', $uid)->first(['id', 'username', 'name', 'avatar', 'nickname', 'position']);
         $data = [
             'menu' => Permission::query()->orderBy('id')->get()->toArray(),
             'permissions' => $this->getMenuList($user),
         ];
+
+        $this->redisClientService->binding(Json::encode($data), $uid); // 缓存到redis
+
         return $this->buildSuccess($data);
     }
 
