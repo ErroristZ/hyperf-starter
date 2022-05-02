@@ -193,4 +193,16 @@ class UserService extends AbstractController
 
         return $this->buildSuccess();
     }
+
+    /**
+     * FunctionName：all
+     * Description：
+     * Author：zhangkang.
+     * @return array
+     */
+    public function all()
+    {
+        $list = User::query()->select('id', 'name', 'mobile', 'nickname')->get();
+        return $this->buildSuccess($list);
+    }
 }

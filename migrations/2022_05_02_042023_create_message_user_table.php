@@ -13,26 +13,23 @@ use Hyperf\Database\Migrations\Migration;
 use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Schema\Schema;
 
-class CreateMessageTable extends Migration
+class CreateMessageUserTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('message', function (Blueprint $table) {
+        Schema::create('message_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title', '50');
-            $table->string('content', '255')->nullable();
-            $table->tinyInteger('type')->default(0)->comment('类型 1消息 2通知 3代办');
+            $table->integer('message_id')->comment('消息ID');
             $table->integer('user_id')->comment('发送用户ID');
-            $table->tinyInteger('isRead')->default(0)->comment('类型 0未读 1已读 -1已删除');
 
             $table->unique('id');
 
             $table->timestamps();
             $table->softDeletes();
-            $table->comment('消息表');
+            $table->comment('消息用户表');
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
@@ -44,6 +41,6 @@ class CreateMessageTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('message');
+        Schema::dropIfExists('message_user');
     }
 }

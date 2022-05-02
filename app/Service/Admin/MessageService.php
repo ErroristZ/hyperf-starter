@@ -13,6 +13,9 @@ namespace App\Service\Admin;
 
 use App\Controller\AbstractController;
 use App\Model\Message;
+use App\Model\MessageUser;
+use Hyperf\DbConnection\Db;
+use Phper666\JWTAuth\Util\JWTUtil;
 
 class MessageService extends AbstractController
 {
@@ -20,10 +23,34 @@ class MessageService extends AbstractController
      * FunctionName：list
      * Description：
      * Author：zhangkang.
+     * @param mixed $request
      */
-    public function list(): array
+    public function list($request): array
     {
-        return $this->buildSuccess(Message::query()->orderBy('id')->get()->toArray());
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+
+        $list = Message::query();
+
+        if ($request->input('title')) {
+            $list->where('title', 'like', "%{$request->input('title')}%");
+        }
+
+        if ($request->input('type')) {
+            $list->where('type', $request->input('type'));
+        }
+
+        if ($request->input('created_at')) {
+            $list->whereBetween('created_at', $request->input('created_at'));
+        }
+
+        $list = $list->orderByDesc('id')->paginate($limit, ['*'], 'page', $page);
+
+        foreach ($list->items() as $key => $value) {
+            $list->items()[$key]['messageUserId'] = array_column(MessageUser::query()->where('message_id', $value['id'])->get(['user_id'])->toArray(), 'user_id');
+        }
+
+        return $this->paginate($list);
     }
 
     /**
@@ -34,15 +61,24 @@ class MessageService extends AbstractController
      */
     public function add($request): array
     {
-        $arrSet = [
-            'type' => $request->input('type') ?? 1,
-            'title' => $request->input('title'),
-            'content' => $request->input('content') ?? '',
-            'user_id' => $request->input('user_id') ?? '',
-            'isRead' => 1,
-        ];
+        Db::transaction(function ($request) {
+            $mid = Message::insert([
+                'type' => $request->input('type') ?? 1,
+                'title' => $request->input('title'),
+                'content' => $request->input('content') ?? '',
+                'user_id' => JWTUtil::getParserData($request)['uid'],
+                'isRead' => 1,
+            ]);
 
-        Message::insert($arrSet);
+            $data = [];
+            foreach ($request->input('Ids') as $v) {
+                $data[] = [
+                    'message_id' => $mid,
+                    'user_id' => $v,
+                ];
+            }
+            MessageUser::insert($data);
+        });
 
         return $this->buildSuccess();
     }

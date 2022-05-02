@@ -15,34 +15,33 @@ use Hyperf\DbConnection\Model\Model;
 
 /**
  * @property int $id
- * @property string $title
- * @property string $content
- * @property int $type
+ * @property int $message_id
  * @property int $user_id
+ * @property int $isRead
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
  */
-class Message extends Model
+class MessageUser extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'message';
+    protected $table = 'message_user';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['id', 'title', 'content', 'type', 'user_id'];
+    protected $fillable = ['id', 'message_id', 'user_id', 'isRead', 'created_at'];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['id' => 'int', 'type' => 'integer', 'user_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected $casts = ['id' => 'int', 'message_id' => 'integer', 'user_id' => 'integer', 'isRead' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

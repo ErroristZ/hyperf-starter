@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Controller\Wss;
 
 use App\Model\Message;
+use App\Model\MessageUser;
 use App\Service\Redis\RedisClientService;
 use Phper666\JWTAuth\Util\JWTUtil;
 
@@ -35,7 +36,7 @@ class MessageBusiness
         $redis = new RedisClientService();
         $redis->savaUserID((string) $frame->fd, $user['uid']);
 
-        $list = Message::query();
+        $list = MessageUser::query();
         $list->where('user_id', $user['uid']);
 
         $arrParam['data'] = ['fd' => $frame->fd, 'notReadTotal' => $list->where('isRead', 0)->count()];
@@ -79,13 +80,14 @@ class MessageBusiness
         $intType = intval($arrParam['data']['type']);
 
         $list = Message::query();
-        $list->where('type', $intType);
-        $list->where('user_id', $user_id);
+        $list->where('message.type', $intType);
+        $list->where('message.user_id', $user_id);
+        $list->leftJoin('message_user', 'message_user.message_id', 'message.id');
 
         $arrParam['data'] = [
-            'list' => $list->orderByDesc('id')->paginate($intLimit, ['*'], 'page', $intPage)->items(),
-            'total' => $list->orderByDesc('id')->paginate($intLimit, ['*'], 'page', $intPage)->total(),
-            'notReadTotal' => $list->where('isRead', 0)->count(),
+            'list' => $list->orderByDesc('message.id')->paginate($intLimit, ['*'], 'page', $intPage)->items(),
+            'total' => $list->orderByDesc('message.id')->paginate($intLimit, ['*'], 'page', $intPage)->total(),
+            'notReadTotal' => $list->where('message_user.isRead', 0)->count(),
         ];
         return callbackParam(200, true, $arrParam);
     }

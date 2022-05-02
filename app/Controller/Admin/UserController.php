@@ -187,4 +187,16 @@ class UserController extends AbstractController
         ]);
         return $service->status($this->request);
     }
+
+    /**
+     * FunctionName：all
+     * Description：
+     * Author：zhangkang.
+     * @GetMapping(path="all")
+     * @Middleware(JWTAuthDefaultSceneMiddleware::class)
+     */
+    public function all(UserService $service): array
+    {
+        return $service->all();
+    }
 }

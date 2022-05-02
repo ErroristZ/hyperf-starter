@@ -30,14 +30,26 @@ class MessageController extends AbstractController
 {
     /**
      * FunctionName：list
-     * Description：菜单列表.
+     * Description：消息列表.
      * @GetMapping(path="list")
      * @Middleware(JWTAuthDefaultSceneMiddleware::class)
      * Author：zhangkang.
      */
     public function list(MessageService $service): array
     {
-        return $service->list();
+        $params = [
+            'page' => $this->request->input('page') ?? 1,
+            'limit' => $this->request->input('limit') ?? 10,
+        ];
+
+        $this->validate($params, [
+            'page' => 'required',
+            'limit' => 'required',
+        ], [
+            'page.required' => ' 页数缺失',
+            'limit.required' => ' 条数缺失',
+        ]);
+        return $service->list($this->request);
     }
 
     /**

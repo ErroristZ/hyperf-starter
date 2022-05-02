@@ -51,7 +51,7 @@ class AuthService extends AbstractController
             $data = [
                 'token' => $token->toString(),
                 'expireAt' => $this->jwt->getTTL($token->toString()),
-            ];
+                'timeFix' => getHello() . '，' . $user->nickname . '，欢迎回来',            ];
 
             return $this->buildSuccess($data);
         }
