@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace App\Service\Admin;
 
 use App\Controller\AbstractController;
-use App\Model\ServerlogLogSearchable;
+use App\Model\ServerlogLog;
 
 class ServerlogService extends AbstractController
 {
@@ -27,9 +27,9 @@ class ServerlogService extends AbstractController
         $page = (int) $request->input('page', 1);
         $limit = (int) $request->input('limit', 10);
 
-        $list = new ServerlogLogSearchable();
+        $list = new ServerlogLog();
 
-        $list = $list::search('')->orderBy('created_at', 'desc')->paginate($limit, 'page', $page);
+        $list = $list::query()->orderBy('created_at', 'desc')->paginate($limit, ['*'], 'page', $page);
 
         return $this->paginate($list);
     }

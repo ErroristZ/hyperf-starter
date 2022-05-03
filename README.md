@@ -5,4 +5,6 @@
 
 ### admin模块
 
-`hyperf-casbin`+`jwt-auth`+`kafka日志收集`+`七牛云文件上传`+`WebSocke消息通知`
+`hyperf-casbin`+`jwt-auth`+`七牛云文件上传`+`WebSocke消息通知`
+
+去除了kafka日志收集，AMQP，ElasticSearch

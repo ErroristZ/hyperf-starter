@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Listener;
 
 use App\Event\LogsAdd;
+use App\Model\ServerlogLog;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\HttpServer\Annotation\AutoController;
@@ -54,7 +55,13 @@ class LogsAddListener implements ListenerInterface
     public function process(object $event)
     {
         $data = $event->data;
-        // TODO KAFKA处理有问题
-        $this->kafkaProducer->send('serverlog', json_encode($data, JSON_THROW_ON_ERROR), 'data');
+
+        $log = new ServerlogLog();
+        $log->user_id = $data['user_id'];
+        $log->user_name = $data['user_name'];
+        $log->url = $data['url'];
+        $log->ip = $data['ip'];
+        $log->content = $data['content'];
+        $log->save();
     }
 }
