@@ -1,0 +1,82 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: ./services/nginx
+      args:
+        NGINX_VERSION: nginx:1.19.1-alpine
+        CONTAINER_PACKAGE_URL: mirrors.ustc.edu.cn
+        NGINX_INSTALL_APPS: ''
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/www/:rw
+      - ./services/nginx/ssl:/ssl:rw
+      - ./services/nginx/conf.d:/etc/nginx/conf.d/:rw
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./services/nginx/fastcgi-php.conf:/etc/nginx/fastcgi-php.conf:ro
+      - ./services/nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
+      - ./logs/nginx:/var/logs/nginx/:rw
+    environment:
+      TZ: "Asia/Shanghai"
+    restart: always
+    networks:
+      - default
+
+  hyperf:
+    image: "hyperf/hyperf:8.0-alpine-v3.15-swoole"
+    container_name: hyperf
+    expose:
+      - 9501
+    volumes:
+      - ./:/www/:rw
+    stdin_open: true
+    tty: true
+    user: root
+    entrypoint: /bin/sh
+    environment:
+      TZ: "Asia/Shanghai"
+    networks:
+      - default
+    restart: always
+
+  mysql:
+    image: mysql/mysql-server:8.0.28
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./services/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - ./data/mysql:/var/lib/mysql/:rw
+      - ./logs/mysql:/var/logs/mysql/:rw
+
+    restart: always
+    networks:
+      - default
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_ROOT_HOST: "%"
+      TZ: "Asia/Shanghai"
+
+  redis:
+    image: redis:6.2.6
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./services/redis/redis.conf:/etc/redis.conf:ro
+      - ./data/redis:/data/:rw
+    restart: always
+    entrypoint: [ "redis-server", "/etc/redis.conf" ]
+    environment:
+      TZ: "Asia/Shanghai"
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
