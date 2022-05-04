@@ -16,7 +16,6 @@ use App\Model\ServerlogLog;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\HttpServer\Annotation\AutoController;
-use Hyperf\Kafka\Producer;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -27,12 +26,9 @@ class LogsAddListener implements ListenerInterface
 {
     private ContainerInterface $container;
 
-    private Producer $kafkaProducer;
-
-    public function __construct(ContainerInterface $container, Producer $kafkaProducer)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->kafkaProducer = $kafkaProducer;
     }
 
     /**
