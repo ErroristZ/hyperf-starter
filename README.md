@@ -9,6 +9,9 @@
 
 去除了kafka日志收集，AMQP，ElasticSearch
 
+## 项目预览
+访问地址： http://admin.52yaya.cn 账号：admin 密码: 123456
+
 ## 部署
 
 ```
