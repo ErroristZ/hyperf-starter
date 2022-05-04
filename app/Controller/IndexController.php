@@ -11,18 +11,15 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
-use App\Model\ArticleSearchable;
-
 class IndexController extends AbstractController
 {
-    public function index(): array
+    public function index()
     {
-        $list = ArticleSearchable::search('tag')->get();
-
         $user = $this->request->input('user', 'Hyperf');
+        $method = $this->request->getMethod();
 
         return [
-            'list' => $list,
+            'method' => $method,
             'message' => "Hello {$user}.",
         ];
     }
