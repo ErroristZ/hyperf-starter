@@ -9,3 +9,36 @@
 
 
 simple分支 简单版
+
+## 项目预览
+访问地址： http://admin.52yaya.cn 账号：admin 密码: 123456
+
+## 部署
+
+```
+/
+├── data                        数据库数据目录
+│   ├── mysql                   MySQL8 数据目录
+├── services                    服务构建文件和配置文件目录
+│   ├── mysql                   MySQL8 配置文件目录
+│   ├── nginx                   Nginx 配置文件目录
+│   └── redis                   Redis 配置目录
+├── logs                        日志目录
+├── docker-compose.yml          Docker 服务配置示例文件
+```
+如需管理服务，请在命令后面加上服务器名称，例如：
+```bash
+$ docker-compose up                            # 创建并且启动所有容器
+$ docker-compose up -d                         # 创建并且后台运行方式启动所有容器
+$ docker-compose up nginx hyperf mysql         # 创建并且启动nginx、hyperf、mysql的多个容器
+$ docker-compose up -d nginx hyperf  mysql     # 创建并且已后台运行的方式启动nginx、hyperf、mysql容器
+
+
+$ docker-compose start hyperf                  # 启动服务
+$ docker-compose stop hyperf                   # 停止服务
+$ docker-compose restart hyperf                # 重启服务
+$ docker-compose build hyperf                  # 构建或者重新构建服务
+
+$ docker-compose rm hyperf                     # 删除并且停止hyperf容器
+$ docker-compose down                          # 停止并删除容器，网络，图像和挂载卷
+```
