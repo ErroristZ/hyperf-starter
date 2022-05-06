@@ -38,7 +38,6 @@ php bin/hyperf.php start
 ```
 - 跨域问题，修改中间件CorsMiddleware.php，Access-Control-Allow-Origin配置
 
-
 ## 部署
 
 ```
