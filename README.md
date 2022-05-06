@@ -12,6 +12,30 @@
 ## 项目预览
 访问地址： http://admin.52yaya.cn 账号：admin 密码: 123456
 
+## 运行代码
+
+### 启动服务
+
+```shell
+docker-compose up -d 
+```
+### 安装依赖
+1、进入容器
+```shell
+docker exec -it hyperf /bin/sh
+```
+2、进入项目根目录安装组件
+```shell
+composer install
+```
+3、配置好.env和导入hyperf.sql到数据库
+
+4、启动hyperf服务
+```shell
+php bin/hyperf.php start
+```
+- 跨域问题，修改中间件CorsMiddleware.php，Access-Control-Allow-Origin配置
+
 ## 部署
 
 ```
