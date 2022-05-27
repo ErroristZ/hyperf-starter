@@ -51,7 +51,6 @@ services:
       - ./services/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - ./data/mysql:/var/lib/mysql/:rw
       - ./logs/mysql:/var/logs/mysql/:rw
-
     restart: always
     networks:
       - default

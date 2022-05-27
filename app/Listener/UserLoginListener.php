@@ -37,13 +37,13 @@ class UserLoginListener implements ListenerInterface
             'action' => 'login',
             'url' => $event->user->url,
             'info' => $event->user->info,
-            'ip' => $event->user->ip,
-            'user_agent' => $event->user->header,
+            'ip' => $event->user->ip ?? '0.0.0.0',
+            'user_agent' => $event->user->header ?? '',
         ]);
 
         User::where('id', $event->user->id)->update([
             'last_at' => Carbon::now(),
-            'ip' => $event->user->ip,
+            'ip' => $event->user->ip ?? '0.0.0.0',
         ]);
     }
 }
