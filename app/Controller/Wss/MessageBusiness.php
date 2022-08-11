@@ -75,9 +75,9 @@ class MessageBusiness
     {
         $redis = new RedisClientService();
         $user_id = $redis->findUserId((string) $frame->fd);
-        $intPage = intval($arrParam['data']['page']);
-        $intLimit = intval($arrParam['data']['limit']);
-        $intType = intval($arrParam['data']['type']);
+        $intPage = (int)$arrParam['data']['page'];
+        $intLimit = (int)$arrParam['data']['limit'];
+        $intType = (int)$arrParam['data']['type'];
 
         $list = Message::query();
         $list->where('message.type', $intType);
